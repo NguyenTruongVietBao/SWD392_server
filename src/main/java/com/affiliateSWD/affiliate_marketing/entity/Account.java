@@ -38,6 +38,7 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountRoles role;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private Admin adminDetails;
 
