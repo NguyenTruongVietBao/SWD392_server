@@ -18,9 +18,9 @@ public class Admin {
 
     private String dummyField = "default";
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name="account_id")
-    @JsonIgnore
     Account accountAdmin;
 }
 

@@ -207,8 +207,11 @@ public class AuthenticationService implements UserDetailsService {
         advertisers.setAccountBalance(0.0);
         advertisers.setAccountAdvertisers(account);
         account.setAdvertisers(advertisers);
+
         return authenticationRepository.save(account);
     }
+    
+
 
     public List<Account> getAccountsByRole(AccountRoles role) {
         System.out.println("DEBUG: Role = " + role);

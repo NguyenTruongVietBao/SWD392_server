@@ -1,7 +1,6 @@
-package com.affiliateSWD.affiliate_marketing.api;
+package com.affiliateSWD.affiliate_marketing.Controller;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
-import com.affiliateSWD.affiliate_marketing.entity.Publisher;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.model.AccountResponse;
 import com.affiliateSWD.affiliate_marketing.model.AdvertiserRegisterRequest;
@@ -11,9 +10,11 @@ import com.affiliateSWD.affiliate_marketing.service.AuthenticationService;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Console;
 import java.util.List;
 
 @RestController
@@ -47,10 +48,16 @@ public class AccountsAPI {
     }
 
     @PostMapping("/register/advertier")
-    public ResponseEntity registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
+   
+ public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
+    try {
         Account account = authenticationService.registerAdvertisers(registerRequest);
         return ResponseEntity.ok(account);
+    } catch (Exception ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+}
+
 
     @GetMapping("/role/{role}")
     public ResponseEntity<List<Account>> getByRole(@PathVariable AccountRoles role) {

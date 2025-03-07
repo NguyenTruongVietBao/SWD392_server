@@ -8,9 +8,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+
 //@DiscriminatorValue("PUBLISHER") // Phân biệt kiểu dữ liệu
 //@Table(name = "publishers")
 public class Publisher {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
