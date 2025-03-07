@@ -10,14 +10,7 @@ import java.util.List;
 
 @Repository
 
-public interface AuthenticationRepository extends JpaRepository<Account, Long>
+public interface PublisherRepository extends JpaRepository<Publisher, Long>
 {
-    Account findByUsername(String username);
 
-    Account findAccountById(long userid);
-
-    List<Account> findAll();
-
-    List<Account> findByRole(AccountRoles role);
 }
-
