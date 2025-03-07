@@ -17,7 +17,7 @@ public class CORSConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .maxAge(1440000);
     }
-
+d
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")

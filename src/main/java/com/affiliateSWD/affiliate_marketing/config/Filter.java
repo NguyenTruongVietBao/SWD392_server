@@ -36,7 +36,12 @@ public class Filter extends OncePerRequestFilter {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/websocket/**"
+            "/websocket/**",
+            "/accounts/login",
+            "/accounts/role/{role}",
+            "/accounts/register/publisher",
+            "/accounts/register/advertier"
+//            "/accounts/test"
     );
 
     private boolean isPermitted(String uri) {
@@ -51,11 +56,12 @@ public class Filter extends OncePerRequestFilter {
         if (isPermitted(uri)) {
             // yêu cầu truy cập 1 api => ai cũng truy cập đc
             String token = getToken(request);
+            System.out.println("🔹 Token nhận được: " + token);
             if (token != null) {
-                Account user;
+                Account account;
                 try {
                     // từ token tìm ra thằng đó là ai
-                    user = tokenService.extractAccount(token);
+                    account = tokenService.extractAccount(token);
                 } catch (ExpiredJwtException expiredJwtException) {
                     // token het han
                     resolver.resolveException(request, response, null, new AuthException("Expired Token!"));
@@ -67,7 +73,7 @@ public class Filter extends OncePerRequestFilter {
                 // token dung
                 UsernamePasswordAuthenticationToken
                         authenToken =
-                        new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(account, token, account.getAuthorities());
                 authenToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenToken);
             }
@@ -79,10 +85,10 @@ public class Filter extends OncePerRequestFilter {
                 return;
             }
 
-            Account user;
+            Account account;
             try {
                 // từ token tìm ra thằng đó là ai
-                user = tokenService.extractAccount(token);
+                account = tokenService.extractAccount(token);
             } catch (ExpiredJwtException expiredJwtException) {
                 // token het han
                 resolver.resolveException(request, response, null, new AuthException("Expired Token!"));
@@ -94,16 +100,18 @@ public class Filter extends OncePerRequestFilter {
             // token dung
             UsernamePasswordAuthenticationToken
                     authenToken =
-                    new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(account, token, account.getAuthorities());
             authenToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenToken);
             // token ok, cho vao`
+            System.out.println("✅ Đã đặt Authentication cho: " + account.getUsername());
             filterChain.doFilter(request, response);
         }
     }
 
     public String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("🔹 Authorization Header: " + authHeader);
         if (authHeader == null) return null;
         return authHeader.substring(7);
     }

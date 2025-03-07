@@ -1,14 +1,19 @@
 package com.affiliateSWD.affiliate_marketing.service;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
+import com.affiliateSWD.affiliate_marketing.entity.Advertisers;
 import com.affiliateSWD.affiliate_marketing.entity.Publisher;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.enums.AccountStatus;
+import com.affiliateSWD.affiliate_marketing.model.AdvertiserRegisterRequest;
 import com.affiliateSWD.affiliate_marketing.model.LoginRequest;
 import com.affiliateSWD.affiliate_marketing.model.AccountResponse;
+import com.affiliateSWD.affiliate_marketing.model.PublisherRegisterRequest;
 import com.affiliateSWD.affiliate_marketing.respository.AuthenticationRepository;
+import com.affiliateSWD.affiliate_marketing.respository.PublisherRepository;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import com.affiliateSWD.affiliate_marketing.config.SecurityConfig;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
+
 public class AuthenticationService implements UserDetailsService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
@@ -42,6 +49,9 @@ public class AuthenticationService implements UserDetailsService {
     AuthenticationRepository authenticationRepository;
 
     @Autowired
+    PublisherRepository publisherRepository;
+
+    @Autowired
     SecurityConfig securityConfig;
 
     @Autowired
@@ -52,57 +62,163 @@ public class AuthenticationService implements UserDetailsService {
         return authenticationRepository.findByUsername(username);
     }
 
+//    public AccountResponse login(LoginRequest loginRequest) {
+//        try {
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                    loginRequest.getUsername(),
+//                    loginRequest.getPassword()
+//            ));
+//
+//            Account account = authenticationRepository.findByUsername(loginRequest.getUsername());
+//            if (account == null || !securityConfig.passwordEncoder().matches(loginRequest.getPassword(), account.getPassword())) {
+//                throw new BadCredentialsException("Incorrect username or password");
+//            }
+//            if (!account.getStatus().equals(AccountStatus.ACTIVE)) {
+//                throw new AuthenticationServiceException("Your account is locked!");
+//            }
+//
+//            // ✅ Tạo token chứa thông tin của user
+//            String token = tokenService.generateToken(account);
+//
+//            // ✅ Đưa dữ liệu từ `Account` vào `AccountResponse`
+//            AccountResponse accountResponse = new AccountResponse();
+//            accountResponse.setId(account.getId());
+//            accountResponse.setUsername(account.getUsername());
+//            accountResponse.setEmail(account.getEmail());
+//            accountResponse.setPhoneNumber(account.getPhoneNumber());
+//            accountResponse.setRole(account.getRole());
+//            accountResponse.setStatus(account.getStatus());
+//            accountResponse.setToken(token);
+//
+//            // ✅ Thêm thông tin riêng biệt theo role
+////            if (account.getAdminDetails() != null) {
+////                accountResponse.setManagementLevel(account.getAdminDetails().getManagementLevel());
+////            }
+////            if (account.getAdvertiserDetails() != null) {
+////                accountResponse.setCompanyName(account.getAdvertiserDetails().getCompanyName());
+////                accountResponse.setBillingInfo(account.getAdvertiserDetails().getBillingInfo());
+////            }
+////            if (account.getPublisherDetails() != null) {
+////                accountResponse.setPaymentInfo(account.getPublisherDetails().getPaymentInfo());
+////                accountResponse.setReferralCode(account.getPublisherDetails().getReferralCode());
+////            }
+//            // ✅ Log để kiểm tra dữ liệu trả về
+//            log.info("✅ User logged in: {}", accountResponse);
+//            System.out.println("✅ User logged in: " + accountResponse);
+//            return accountResponse;
+//        } catch (AuthenticationException e) {
+//            throw new BadCredentialsException("Incorrect username or password!");
+//        }
+//    }
+
     public AccountResponse login(LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(),
                     loginRequest.getPassword()
             ));
-
             Account account = authenticationRepository.findByUsername(loginRequest.getUsername());
             if (account == null || !securityConfig.passwordEncoder().matches(loginRequest.getPassword(), account.getPassword())) {
                 throw new BadCredentialsException("Incorrect username or password");
             }
-            if (!account.getStatus().equals(AccountStatus.ACTIVE)) {
-                throw new AuthenticationServiceException("Your account is locked!");
+            if(!account.getStatus().equals(AccountStatus.ACTIVE)){
+                throw new AuthenticationServiceException("Your account locked!!!");
             }
-
-            // ✅ Tạo token chứa thông tin của user
+            AccountResponse accountReponse = new AccountResponse();
             String token = tokenService.generateToken(account);
 
-            // ✅ Đưa dữ liệu từ `Account` vào `AccountResponse`
-            AccountResponse accountResponse = new AccountResponse();
-            accountResponse.setId(account.getId());
-            accountResponse.setUsername(account.getUsername());
-            accountResponse.setEmail(account.getEmail());
-            accountResponse.setPhoneNumber(account.getPhoneNumber());
-            accountResponse.setRole(account.getRole());
-            accountResponse.setStatus(account.getStatus());
-            accountResponse.setToken(token);
+            accountReponse.setUsername(account.getUsername());
+            accountReponse.setId(account.getId());
+            accountReponse.setEmail(account.getEmail());
+            accountReponse.setPhoneNumber(account.getPhoneNumber());
+            accountReponse.setRole(account.getRole());
+            accountReponse.setStatus(account.getStatus());
+            accountReponse.setToken(token);
 
-            // ✅ Thêm thông tin riêng biệt theo role
-            if (account.getAdminDetails() != null) {
-                accountResponse.setManagementLevel(account.getAdminDetails().getManagementLevel());
+            if (account.getRole().equals(AccountRoles.PUBLISHER) && account.getPublisher() != null){
+                accountReponse.setPaymentInfo(account.getPublisher().getPaymentInfo());
+                accountReponse.setReferralCode(account.getPublisher().getReferralCode());
+            } else if (account.getRole().equals(AccountRoles.ADVERTISERS) && account.getAdvertisers() != null){
+                accountReponse.setBillingInfo(account.getAdvertisers().getBillingInfo());
+                accountReponse.setCompanyName(account.getAdvertisers().getCompanyName());
+                accountReponse.setAccountBalance(account.getAdvertisers().getAccountBalance());
             }
-            if (account.getAdvertiserDetails() != null) {
-                accountResponse.setCompanyName(account.getAdvertiserDetails().getCompanyName());
-                accountResponse.setBillingInfo(account.getAdvertiserDetails().getBillingInfo());
-            }
-            if (account.getPublisherDetails() != null) {
-                accountResponse.setPaymentInfo(account.getPublisherDetails().getPaymentInfo());
-                accountResponse.setReferralCode(account.getPublisherDetails().getReferralCode());
-            }
-            // ✅ Log để kiểm tra dữ liệu trả về
-            log.info("✅ User logged in: {}", accountResponse);
-            System.out.println("✅ User logged in: " + accountResponse);
-            return accountResponse;
+            return accountReponse;
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Incorrect username or password!");
         }
     }
 
-    public List<Account> getAllAccount() {
-        return authenticationRepository.findAll();
+    public AccountResponse loginWithToken() {
+        Account account=  authenticationRepository.findAccountById(accountUtils.getAccountCurrent().getId());
+        System.out.println(account.getId());
+        if(!account.getStatus().equals(AccountStatus.ACTIVE)){
+            throw new AuthenticationServiceException("Your account locked!!!");
+        }
+        AccountResponse accountReponse = new AccountResponse();
+        String token = tokenService.generateToken(account);
+        accountReponse.setUsername(account.getUsername());
+        accountReponse.setId(account.getId());
+        accountReponse.setEmail(account.getEmail());
+        accountReponse.setPhoneNumber(account.getPhoneNumber());
+        accountReponse.setRole(account.getRole());
+        accountReponse.setStatus(account.getStatus());
+        accountReponse.setToken(token);
+        if (account.getRole().equals(AccountRoles.PUBLISHER) && account.getPublisher() != null){
+            accountReponse.setPaymentInfo(account.getPublisher().getPaymentInfo());
+            accountReponse.setReferralCode(account.getPublisher().getReferralCode());
+        } else if (account.getRole().equals(AccountRoles.ADVERTISERS) && account.getAdvertisers() != null){
+            accountReponse.setBillingInfo(account.getAdvertisers().getBillingInfo());
+            accountReponse.setCompanyName(account.getAdvertisers().getCompanyName());
+            accountReponse.setAccountBalance(account.getAdvertisers().getAccountBalance());
+        }
+        return accountReponse;
+    }
+
+    public Account registerPublisher(PublisherRegisterRequest registerRequest) throws AuthenticationServiceException{
+        Account account = new Account();
+        account.setUsername(registerRequest.getUsername());
+        account.setEmail(registerRequest.getEmail());
+        account.setPhoneNumber(registerRequest.getPhoneNumber());
+        account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        account.setRole(AccountRoles.PUBLISHER);
+        account.setStatus(AccountStatus.ACTIVE);
+
+        Publisher publisher = new Publisher();
+        publisher.setPaymentInfo(registerRequest.getPaymentInfo());
+        publisher.setReferralCode(registerRequest.getReferralCode());
+        publisher.setAccountPublisher(account);
+        account.setPublisher(publisher);
+        return authenticationRepository.save(account);
+    }
+
+    public Account registerAdvertisers(AdvertiserRegisterRequest registerRequest) throws AuthenticationServiceException{
+        Account account = new Account();
+        account.setUsername(registerRequest.getUsername());
+        account.setEmail(registerRequest.getEmail());
+        account.setPhoneNumber(registerRequest.getPhoneNumber());
+        account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        account.setRole(AccountRoles.ADVERTISERS);
+        account.setStatus(AccountStatus.ACTIVE);
+
+        Advertisers advertisers = new Advertisers();
+        advertisers.setBillingInfo(registerRequest.getBillingInfo());
+        advertisers.setCompanyName(registerRequest.getCompanyName());
+        advertisers.setAccountBalance(0.0);
+        advertisers.setAccountAdvertisers(account);
+        account.setAdvertisers(advertisers);
+        return authenticationRepository.save(account);
+    }
+
+    public List<Account> getAccountsByRole(AccountRoles role) {
+        System.out.println("DEBUG: Role = " + role);
+        List<Account> accounts = authenticationRepository.findByRole(role);
+        System.out.println("DEBUG: Accounts found = " + accounts);
+        return accounts;
+    }
+
+    public  Account test(){
+        return accountUtils.getAccountCurrent();
     }
 
 }
