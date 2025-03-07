@@ -28,6 +28,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.util.List;
 
 @Service
@@ -116,7 +117,10 @@ public class AuthenticationService implements UserDetailsService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(),
                     loginRequest.getPassword()
-            ));
+            ));             
+            if(loginRequest == null || loginRequest.getPassword() == null || loginRequest.getUsername() == null){
+                throw new BadCredentialsException("Bad request");
+            }
             Account account = authenticationRepository.findByUsername(loginRequest.getUsername());
             if (account == null || !securityConfig.passwordEncoder().matches(loginRequest.getPassword(), account.getPassword())) {
                 throw new BadCredentialsException("Incorrect username or password");
@@ -211,7 +215,6 @@ public class AuthenticationService implements UserDetailsService {
         return authenticationRepository.save(account);
     }
     
-
 
     public List<Account> getAccountsByRole(AccountRoles role) {
         System.out.println("DEBUG: Role = " + role);

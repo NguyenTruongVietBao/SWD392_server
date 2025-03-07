@@ -14,12 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Console;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
-@SecurityRequirement(name = "accounts")
+@SecurityRequirement(name = "bearerAuth")
 
 public class AccountsAPI {
 
@@ -31,8 +31,10 @@ public class AccountsAPI {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("check" + loginRequest);
         AccountResponse users = authenticationService.login(loginRequest);
         return ResponseEntity.ok(users);
+        
     }
 
     @PostMapping("/loginWithToken")
