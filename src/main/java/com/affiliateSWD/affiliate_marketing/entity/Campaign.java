@@ -1,17 +1,20 @@
 package com.affiliateSWD.affiliate_marketing.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
 @Entity
 @Setter
 @Getter
+
 public class Campaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +39,24 @@ public class Campaign {
     private LocalDateTime approvedAt;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "admin_id", nullable = false)
-    private Admin admin;
+    private Admin adminCampaign;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "advertisers_id", nullable = false)
-    private Advertisers advertisers;
+    private Advertisers advertisersCampaign;
 
+    @OneToMany(mappedBy = "campaignFeedback", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Feedback> feedback;
+
+    @OneToMany(mappedBy = "campaignDashboard", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<DashboardMatric> dashboardMatrics;
+
+    @OneToMany(mappedBy = "campaignAffiliate", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<AffiliateLink> affiliateLinks;
 }

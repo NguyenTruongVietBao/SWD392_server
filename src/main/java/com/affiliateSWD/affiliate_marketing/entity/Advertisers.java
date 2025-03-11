@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
-//@DiscriminatorValue("ADVERTISER") // Phân biệt kiểu dữ liệu
-//@Table(name = "advertisers")
 
 public class Advertisers {
 
@@ -27,4 +27,20 @@ public class Advertisers {
     @JoinColumn(name="account_id", nullable = false, unique = true)
     @JsonIgnore
     Account accountAdvertisers;
+
+    @OneToMany(mappedBy = "advertisersCampaign", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Campaign> campaigns;
+
+    @OneToMany(mappedBy = "advertisersDashboard", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<DashboardMatric> dashboardMatrics;
+
+    @OneToMany(mappedBy = "advertisersTransaction", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Transaction> transactions;
+
+    @OneToMany(mappedBy = "advertisersPayout", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Payout> payouts;
 }

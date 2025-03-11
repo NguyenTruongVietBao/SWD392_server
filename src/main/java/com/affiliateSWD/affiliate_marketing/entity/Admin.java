@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
-//@DiscriminatorValue("ADMIN") // Phân biệt kiểu dữ liệu
-//@Table(name = "admins")
 
 public class Admin {
     @Id
@@ -22,5 +22,17 @@ public class Admin {
     @OneToOne
     @JoinColumn(name="account_id", nullable = false, unique = true)
     Account accountAdmin;
+
+    @OneToMany(mappedBy = "adminCampaign", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Campaign> campaigns;
+    //
+    @OneToMany(mappedBy = "adminPayout", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Payout> payouts;
+
+    @OneToMany(mappedBy = "adminFraud", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<FraudDetection> fraudDetections;
 }
 
