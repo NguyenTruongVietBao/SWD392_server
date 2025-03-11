@@ -49,7 +49,7 @@ public class AccountsAPI {
         return ResponseEntity.ok(account);
     }
 
-    @PostMapping("/register/advertier")
+    @PostMapping("/register/advertiser")
    
  public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
     try {
