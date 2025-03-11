@@ -2,6 +2,7 @@ package com.affiliateSWD.affiliate_marketing.entity;
 
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.enums.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,14 +40,17 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountRoles role;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "accountPublisher")
-    Publisher publisher;
+       @JsonManagedReference
+    @OneToOne(mappedBy = "accountPublisher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Publisher publisher;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "accountAdvertisers")
-    Advertisers advertisers;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "accountAdvertisers", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Advertisers advertisers;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "accountAdmin")
-    Admin admin;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "accountAdmin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Admin admin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

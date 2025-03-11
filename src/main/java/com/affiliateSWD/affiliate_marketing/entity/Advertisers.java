@@ -24,7 +24,7 @@ public class Advertisers {
     private String billingInfo;
 
     @OneToOne
-    @JoinColumn(name="account_id")
+    @JoinColumn(name="account_id", nullable = false, unique = true)
     @JsonIgnore
     Account accountAdvertisers;
 }

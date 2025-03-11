@@ -35,20 +35,20 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationService authenticationService)  throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationService authenticationService) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers("/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-
+                                .requestMatchers("/**").permitAll() 
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN") // Chỉ ADMIN mới truy cập được
+                                .requestMatchers("/api/advertiser/**").hasAnyRole("ADVERTISERS", "ADMIN") // USER hoặc ADMIN truy cập
+                                .anyRequest().authenticated() // Các API còn lại phải xác thực
                 )
                 .userDetailsService(authenticationService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
 }

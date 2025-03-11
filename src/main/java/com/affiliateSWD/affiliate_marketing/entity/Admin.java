@@ -20,7 +20,7 @@ public class Admin {
 
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name="account_id")
+    @JoinColumn(name="account_id", nullable = false, unique = true)
     Account accountAdmin;
 }
 

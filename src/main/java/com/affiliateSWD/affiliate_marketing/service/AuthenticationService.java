@@ -62,7 +62,9 @@ public class AuthenticationService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return authenticationRepository.findByUsername(username);
     }
-
+    public Account findByUsername(String username) {
+        return authenticationRepository.findByUsername(username);
+    }
 //    public AccountResponse login(LoginRequest loginRequest) {
 //        try {
 //            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
