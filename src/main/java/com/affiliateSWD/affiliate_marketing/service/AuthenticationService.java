@@ -65,54 +65,6 @@ public class AuthenticationService implements UserDetailsService {
     public Account findByUsername(String username) {
         return authenticationRepository.findByUsername(username);
     }
-//    public AccountResponse login(LoginRequest loginRequest) {
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-//                    loginRequest.getUsername(),
-//                    loginRequest.getPassword()
-//            ));
-//
-//            Account account = authenticationRepository.findByUsername(loginRequest.getUsername());
-//            if (account == null || !securityConfig.passwordEncoder().matches(loginRequest.getPassword(), account.getPassword())) {
-//                throw new BadCredentialsException("Incorrect username or password");
-//            }
-//            if (!account.getStatus().equals(AccountStatus.ACTIVE)) {
-//                throw new AuthenticationServiceException("Your account is locked!");
-//            }
-//
-//            // ✅ Tạo token chứa thông tin của user
-//            String token = tokenService.generateToken(account);
-//
-//            // ✅ Đưa dữ liệu từ `Account` vào `AccountResponse`
-//            AccountResponse accountResponse = new AccountResponse();
-//            accountResponse.setId(account.getId());
-//            accountResponse.setUsername(account.getUsername());
-//            accountResponse.setEmail(account.getEmail());
-//            accountResponse.setPhoneNumber(account.getPhoneNumber());
-//            accountResponse.setRole(account.getRole());
-//            accountResponse.setStatus(account.getStatus());
-//            accountResponse.setToken(token);
-//
-//            // ✅ Thêm thông tin riêng biệt theo role
-////            if (account.getAdminDetails() != null) {
-////                accountResponse.setManagementLevel(account.getAdminDetails().getManagementLevel());
-////            }
-////            if (account.getAdvertiserDetails() != null) {
-////                accountResponse.setCompanyName(account.getAdvertiserDetails().getCompanyName());
-////                accountResponse.setBillingInfo(account.getAdvertiserDetails().getBillingInfo());
-////            }
-////            if (account.getPublisherDetails() != null) {
-////                accountResponse.setPaymentInfo(account.getPublisherDetails().getPaymentInfo());
-////                accountResponse.setReferralCode(account.getPublisherDetails().getReferralCode());
-////            }
-//            // ✅ Log để kiểm tra dữ liệu trả về
-//            log.info("✅ User logged in: {}", accountResponse);
-//            System.out.println("✅ User logged in: " + accountResponse);
-//            return accountResponse;
-//        } catch (AuthenticationException e) {
-//            throw new BadCredentialsException("Incorrect username or password!");
-//        }
-//    }
 
     public AccountResponse login(LoginRequest loginRequest) {
         try {
@@ -219,9 +171,7 @@ public class AuthenticationService implements UserDetailsService {
     
 
     public List<Account> getAccountsByRole(AccountRoles role) {
-        System.out.println("DEBUG: Role = " + role);
         List<Account> accounts = authenticationRepository.findByRole(role);
-        System.out.println("DEBUG: Accounts found = " + accounts);
         return accounts;
     }
 

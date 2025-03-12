@@ -1,5 +1,6 @@
 package com.affiliateSWD.affiliate_marketing.entity;
 
+import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +34,9 @@ public class Campaign {
     private String imageUrl;
     private LocalDate startDate;
     private LocalDate  endDate;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private CampaignStatus status;
     
     private LocalDateTime createdAt;
     private LocalDateTime approvedAt;

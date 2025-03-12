@@ -10,8 +10,7 @@ import java.util.List;
 
 @Repository
 
-public interface AuthenticationRepository extends JpaRepository<Account, Long>
-{
+public interface AuthenticationRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);
 
     Account findAccountById(long userid);
