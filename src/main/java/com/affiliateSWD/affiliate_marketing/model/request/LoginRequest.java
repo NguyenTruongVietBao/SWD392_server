@@ -1,4 +1,4 @@
-package com.affiliateSWD.affiliate_marketing.model;
+package com.affiliateSWD.affiliate_marketing.model.request;
 
 import lombok.Data;
 import lombok.Getter;

@@ -32,7 +32,7 @@ public class TokenService {
     public String generateToken(Account account) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", account.getRole().name());  // 🔥 Lưu role vào token (dưới dạng String)
-
+        claims.put("userId", account.getId());
         return Jwts.builder()
                 .claims(claims)
                 .subject(account.getUsername()) // Chủ sở hữu của token
@@ -89,5 +89,9 @@ public class TokenService {
     public <T> T extractClaim(String token, Function<Claims, T> resolver) {
         Claims claims = extractAllClaims(token);
         return resolver.apply(claims);
+    }
+
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 }
