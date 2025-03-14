@@ -1,7 +1,10 @@
 package com.affiliateSWD.affiliate_marketing.service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
+import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +48,7 @@ public class CampaignService {
         }
         return null;
     }
+
     public boolean deleteCampaign(Long id) {
         if (campaignRepository.existsById(id)) {
             campaignRepository.deleteById(id);
@@ -52,4 +56,14 @@ public class CampaignService {
         }
         return false; 
     }
+
+    public Campaign statusCampaign(Long id, CampaignStatus status) {
+        Campaign existingCampaign = campaignRepository.findById(id).orElse(null);
+        if (existingCampaign != null) {
+            existingCampaign.setStatus(status);
+            return campaignRepository.save(existingCampaign);
+        }
+        return null;
+    }
+
 }
