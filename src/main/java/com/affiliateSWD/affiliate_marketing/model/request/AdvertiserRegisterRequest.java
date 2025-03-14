@@ -1,15 +1,15 @@
-package com.affiliateSWD.affiliate_marketing.model;
+package com.affiliateSWD.affiliate_marketing.model.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PublisherRegisterRequest {
+public class AdvertiserRegisterRequest {
     private String username;
     private String email;
     private String phoneNumber;
     private String password;
-    private String paymentInfo;
-    private String referralCode;
+    private String companyName;
+    private String billingInfo;
 }

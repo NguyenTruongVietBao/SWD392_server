@@ -43,7 +43,7 @@ public class Campaign {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id", nullable = true)
     private Admin adminCampaign;
     
     @ManyToOne

@@ -8,12 +8,16 @@ import java.util.*;
 import com.affiliateSWD.affiliate_marketing.entity.AffiliateLink;
 import com.affiliateSWD.affiliate_marketing.entity.Clicks;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
+import com.affiliateSWD.affiliate_marketing.model.request.CampaignRequest;
 import com.affiliateSWD.affiliate_marketing.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
@@ -40,6 +44,9 @@ public class CampaignController {
     private ClickTrackingService clickTrackingService;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private TotalClickService totalClickService;
 
     @GetMapping
@@ -50,19 +57,38 @@ public class CampaignController {
     @GetMapping("/{id}")
     public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
         Campaign campaign = campaignService.getCampaignById(id);
-        return ResponseEntity.ok(campaign);
-                       
+        return ResponseEntity.ok(campaign);   
+    }
+    @PutMapping("/updateStatus/{id}")
+    public ResponseEntity<?> updateCampaignStatus(
+    @PathVariable Long id, 
+    @RequestParam CampaignStatus status,
+    Principal principal) {
+        try {
+            String username = principal.getName(); 
+            Account account = authenticationService.findByUsername(username);
+
+            Long adminId = account.getId();
+    
+            Campaign updatedCampaign = campaignService.updateCampaignStatus(id, status, adminId);
+            return ResponseEntity.ok(updatedCampaign);
+        } catch (RuntimeException e) {
+            
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<?> createCampaign(@RequestBody Campaign campaign, Principal principal) {
-         String username = principal.getName(); 
+    public ResponseEntity<?> createCampaign(@RequestBody CampaignRequest campaign, Principal principal) {
+        String username = principal.getName(); 
         Account account = authenticationService.findByUsername(username);
 
         if (account == null || !AccountRoles.ADVERTISERS.equals(account.getRole())) {    
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only advertisers can create campaigns");
     }
-        Campaign data = campaignService.createCampaign(campaign);
+        Long Id = account.getId();
+
+        Campaign data = campaignService.createCampaign(campaign, Id);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Campaign created successfully");
         response.put("data", data);
@@ -88,15 +114,15 @@ public class CampaignController {
         return ResponseEntity.notFound().build(); 
     }
 
-    @PutMapping("changeStatus/{id}")
-    public ResponseEntity<Campaign> changeStatusCampaign(@PathVariable Long id, CampaignStatus status) {
-        try {
-            Campaign changeCampaign = campaignService.statusCampaign(id, status);
-            return ResponseEntity.ok(changeCampaign);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // @PutMapping("changeStatus/{id}")
+    // public ResponseEntity<Campaign> changeStatusCampaign(@PathVariable Long id, CampaignStatus status) {
+    //     try {
+    //         Campaign changeCampaign = campaignService.statusCampaign(id, status);
+    //         return ResponseEntity.ok(changeCampaign);
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 
     @PreAuthorize("hasAuthority('PUBLISHER')")
     @PostMapping("/generateLink/{campaignId}/{adsLink}")

@@ -40,7 +40,7 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountRoles role;
 
-       @JsonManagedReference
+    @JsonManagedReference
     @OneToOne(mappedBy = "accountPublisher", cascade = CascadeType.ALL, orphanRemoval = true)
     private Publisher publisher;
 
@@ -76,4 +76,5 @@ public class Account implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

@@ -2,10 +2,10 @@ package com.affiliateSWD.affiliate_marketing.Controller;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
-import com.affiliateSWD.affiliate_marketing.model.AccountResponse;
-import com.affiliateSWD.affiliate_marketing.model.AdvertiserRegisterRequest;
-import com.affiliateSWD.affiliate_marketing.model.LoginRequest;
-import com.affiliateSWD.affiliate_marketing.model.PublisherRegisterRequest;
+import com.affiliateSWD.affiliate_marketing.model.request.AdvertiserRegisterRequest;
+import com.affiliateSWD.affiliate_marketing.model.request.LoginRequest;
+import com.affiliateSWD.affiliate_marketing.model.request.PublisherRegisterRequest;
+import com.affiliateSWD.affiliate_marketing.model.Response.AccountResponse;
 import com.affiliateSWD.affiliate_marketing.service.AuthenticationService;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,12 +34,11 @@ public class AccountsAPI {
         System.out.println("check" + loginRequest);
         AccountResponse users = authenticationService.login(loginRequest);
         return ResponseEntity.ok(users);
-        
     }
 
     @PostMapping("/loginWithToken")
     public ResponseEntity loginWithToken() {
-        Account account = authenticationService.loginWithToken();
+        AccountResponse account = authenticationService.loginWithToken();
         return ResponseEntity.ok(account);
     }
 
