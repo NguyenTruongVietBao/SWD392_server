@@ -21,6 +21,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ActionType actionType;
 
     private float amount;
@@ -48,4 +49,5 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "payout_id", nullable = false)
     private Payout payoutTransaction;
+
 }
