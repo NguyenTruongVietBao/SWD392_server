@@ -15,7 +15,7 @@ import com.affiliateSWD.affiliate_marketing.entity.Admin;
 import com.affiliateSWD.affiliate_marketing.entity.Advertisers;
 import com.affiliateSWD.affiliate_marketing.entity.Campaign;
 import com.affiliateSWD.affiliate_marketing.respository.AdminRepository;
-import com.affiliateSWD.affiliate_marketing.respository.AdvertisersReposioty;
+import com.affiliateSWD.affiliate_marketing.respository.AdvertisersRepository;
 import com.affiliateSWD.affiliate_marketing.respository.CampaignRepository;
 @Service
 public class CampaignService {
@@ -25,7 +25,7 @@ public class CampaignService {
     @Autowired
     private AdminRepository adminRepository;
     @Autowired
-    private AdvertisersReposioty advertisersReposioty;
+    private AdvertisersRepository advertisersReposioty;
 
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
