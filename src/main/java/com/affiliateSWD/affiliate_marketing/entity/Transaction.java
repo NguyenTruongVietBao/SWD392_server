@@ -30,6 +30,7 @@ public class Transaction {
 
     private float commissionEarned;
 
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
     private LocalDateTime createAt;

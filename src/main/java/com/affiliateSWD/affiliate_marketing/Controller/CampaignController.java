@@ -151,22 +151,17 @@ public class CampaignController {
 
             Long publisherId = Long.parseLong(parts[0]);
             Long campaignId  = Long.parseLong(parts[1]);
-                        System.out.println("1");
+
             Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(publisherId, campaignId);
             if (affiliateLink.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-                        System.out.println("2");
-            Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null));
+
+            Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null), request);
             if (transaction == null){
                 return ResponseEntity.notFound().build();
             }
-            System.out.println("3");
-            Clicks clicks = clickTrackingService.createClick(affiliateLink.orElse(null), request, transaction);
-            if (clicks == null) {
-                return ResponseEntity.notFound().build();
-            }
-            System.out.println("4");
+
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();

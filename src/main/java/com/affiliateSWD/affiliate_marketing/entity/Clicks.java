@@ -27,6 +27,7 @@ public class Clicks {
 
     private float quanlityScore;
 
+    @Enumerated(EnumType.STRING)
     private ClickStatus status;
 
     private LocalDateTime timeClick;
@@ -36,7 +37,7 @@ public class Clicks {
     private AffiliateLink affiliateLinkClick;
 
     @ManyToOne
-    @JoinColumn(name = "click_id", nullable = false)
+    @JoinColumn(name = "transaction_id", nullable = true)
     private Transaction transactionClick;
 
     @OneToOne(mappedBy = "clickFraud", cascade = CascadeType.ALL)
