@@ -5,11 +5,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.*;
 
-import com.affiliateSWD.affiliate_marketing.entity.AffiliateLink;
-import com.affiliateSWD.affiliate_marketing.entity.Clicks;
+import com.affiliateSWD.affiliate_marketing.entity.*;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 import com.affiliateSWD.affiliate_marketing.model.request.CampaignRequest;
 import com.affiliateSWD.affiliate_marketing.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.affiliateSWD.affiliate_marketing.entity.Account;
-import com.affiliateSWD.affiliate_marketing.entity.Campaign;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,6 +46,9 @@ public class CampaignController {
 
     @Autowired
     private TotalClickService totalClickService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @GetMapping
     public List<Campaign> getAllCampaigns() {
@@ -136,7 +137,7 @@ public class CampaignController {
     }
 
     @GetMapping("/affiliateLink/redirect")
-    public ResponseEntity<Void> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Void> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String safeAffId = aff_id.replace("-", "+").replace("_", "/");
 
@@ -156,10 +157,14 @@ public class CampaignController {
                 return ResponseEntity.notFound().build();
             }
 
-//            Clicks clicks = clickTrackingService.createClick(affiliateLink.orElse(null));
-//            if (clicks == null) {
-//                return ResponseEntity.notFound().build();
-//            }
+            Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null));
+            if (transaction == null){
+                return ResponseEntity.notFound().build();
+            }
+            Clicks clicks = clickTrackingService.createClick(affiliateLink.orElse(null), request, transaction);
+            if (clicks == null) {
+                return ResponseEntity.notFound().build();
+            }
 
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 

@@ -23,11 +23,11 @@ public class Transaction {
 
     private ActionType actionType;
 
-    private BigDecimal amount;
+    private float amount;
 
-    private BigDecimal advertiserCost;
+    private float advertiserCost;
 
-    private BigDecimal commissionEarned;
+    private float commissionEarned;
 
     private TransactionStatus status;
 
