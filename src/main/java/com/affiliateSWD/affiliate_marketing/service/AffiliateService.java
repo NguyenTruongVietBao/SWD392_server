@@ -30,8 +30,7 @@ public class AffiliateService {
     public String createAffiliateLink(String adsLink, Long campaignId) {
         Campaign existingCampaign = campaignRepository.findById(campaignId).orElse(null);;
         if (existingCampaign != null) {
-//            String originUrl = "https://swd392-project.onrender.com/";
-            String originUrl = "http://localhost:8080/";
+            String originUrl = "https://swd392-project.onrender.com/";
             String combinedInfo = accountUtils.getAccountCurrent().getId() + "_" + campaignId;
 
             String encodedAffiliateId = Base64.getUrlEncoder()
