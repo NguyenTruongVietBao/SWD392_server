@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/accounts")
 @SecurityRequirement(name = "bearerAuth")
 
+
 public class AccountsAPI {
 
     @Autowired
