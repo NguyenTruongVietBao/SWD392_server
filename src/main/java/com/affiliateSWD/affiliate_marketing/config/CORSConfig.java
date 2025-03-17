@@ -20,7 +20,7 @@ public class CORSConfig implements WebMvcConfigurer {
 @Override
 public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/**")
-            .allowedOrigins("http://localhost:5173")  // Cấu hình để chỉ cho phép từ localhost:5173
+            .allowedOrigins("*")  // Cấu hình để chỉ cho phép từ localhost:5173
             .allowedHeaders("*")
             .exposedHeaders("*")
             .allowedMethods("GET", "POST", "PUT", "DELETE")  // Cấu hình các phương thức HTTP mà bạn muốn cho phép
