@@ -21,14 +21,16 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ActionType actionType;
 
-    private BigDecimal amount;
+    private float amount;
 
-    private BigDecimal advertiserCost;
+    private float advertiserCost;
 
-    private BigDecimal commissionEarned;
+    private float commissionEarned;
 
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
 
     private LocalDateTime createAt;
@@ -48,4 +50,5 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "payout_id", nullable = false)
     private Payout payoutTransaction;
+
 }

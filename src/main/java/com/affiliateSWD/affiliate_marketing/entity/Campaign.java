@@ -27,7 +27,7 @@ public class Campaign {
     private String targetAudience ;
 
     private float commissionRate;
-    private BigDecimal commissionValue;
+    private float commissionValue;
 
     private float rating;
     private String adsLink;

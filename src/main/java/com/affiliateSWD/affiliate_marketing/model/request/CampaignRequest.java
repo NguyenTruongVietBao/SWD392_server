@@ -24,7 +24,7 @@ public class CampaignRequest {
    private String targetAudience ;
 
    private float commissionRate;
-   private BigDecimal commissionValue;
+   private float commissionValue;
 
    private float rating;
    private String adsLink;

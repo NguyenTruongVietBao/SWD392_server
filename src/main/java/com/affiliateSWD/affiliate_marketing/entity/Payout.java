@@ -31,14 +31,14 @@ public class Payout {
     Set<Transaction> transactions;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id")
     private Admin adminPayout;
 
     @ManyToOne
-    @JoinColumn(name = "publisher_id", nullable = false)
+    @JoinColumn(name = "publisher_id")
     private Publisher publisherPayout;
 
     @ManyToOne
-    @JoinColumn(name = "advertiser_id", nullable = false)
+    @JoinColumn(name = "advertiser_id")
     private Advertisers advertisersPayout;
 }
