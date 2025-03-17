@@ -52,6 +52,7 @@ public class CampaignController {
     @Autowired
     private TransactionService transactionService;
 
+    @CrossOrigin
     @GetMapping
     public List<Campaign> getAllCampaigns() {
         return campaignService.getAllCampaigns();
