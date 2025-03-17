@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/advertiser/campaigns")
+
 public class CampaignController {
 
     @Autowired
@@ -46,9 +47,10 @@ public class CampaignController {
     @Autowired
     private TokenService tokenService;
 
+
     @Autowired
     private TotalClickService totalClickService;
-
+    @CrossOrigin
     @GetMapping
     public List<Campaign> getAllCampaigns() {
         return campaignService.getAllCampaigns();
