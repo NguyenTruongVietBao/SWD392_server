@@ -108,13 +108,4 @@ public class CampaignService {
         return false; 
     }
 
-    public Campaign statusCampaign(Long id, CampaignStatus status) {
-        Campaign existingCampaign = campaignRepository.findById(id).orElse(null);
-        if (existingCampaign != null) {
-            existingCampaign.setStatus(status);
-            return campaignRepository.save(existingCampaign);
-        }
-        return null;
-    }
-
 }

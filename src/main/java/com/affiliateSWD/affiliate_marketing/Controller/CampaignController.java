@@ -129,10 +129,10 @@ public class CampaignController {
     // }
 
     @PreAuthorize("hasAuthority('PUBLISHER')")
-    @PostMapping("/generateLink/{campaignId}/{adsLink}")
-    public ResponseEntity<String> generateAffiliateLink(@PathVariable Long campaignId, String adsLink) {
+    @PostMapping("/generateLink/{campaignId}")
+    public ResponseEntity<String> generateAffiliateLink(@PathVariable Long campaignId) {
         try {
-            String affiliateLink = affiliateService.createAffiliateLink(adsLink, campaignId);
+            String affiliateLink = affiliateService.createAffiliateLink(campaignId);
             return ResponseEntity.ok(affiliateLink);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -168,6 +168,7 @@ public class CampaignController {
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();
+            System.out.println(redirectUrl);
             response.sendRedirect(redirectUrl);
 
             return ResponseEntity.ok().build();

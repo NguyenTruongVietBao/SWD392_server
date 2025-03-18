@@ -27,7 +27,7 @@ public class AffiliateService {
     @Autowired
     AccountUtils accountUtils;
 
-    public String createAffiliateLink(String adsLink, Long campaignId) {
+    public String createAffiliateLink(Long campaignId) {
         Campaign existingCampaign = campaignRepository.findById(campaignId).orElse(null);;
         if (existingCampaign != null) {
             String originUrl = "https://swd392-project.onrender.com/";
