@@ -13,14 +13,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/accounts")
 @SecurityRequirement(name = "bearerAuth")
 
@@ -32,13 +33,18 @@ public class AccountsAPI {
 
     @Autowired
     AccountUtils accountUtils;
+    
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("check" + loginRequest);
+public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    try {
         AccountResponse users = authenticationService.login(loginRequest);
         return ResponseEntity.ok(users);
+    } catch (BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Collections.singletonMap("message", e.getMessage()));
     }
+}
 
     @PostMapping("/loginWithToken")
     public ResponseEntity loginWithToken() {

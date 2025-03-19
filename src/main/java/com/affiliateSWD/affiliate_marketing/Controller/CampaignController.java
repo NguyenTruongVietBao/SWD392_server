@@ -25,6 +25,7 @@ import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
+@CrossOrigin
 @SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/advertiser/campaigns")
 
@@ -52,7 +53,7 @@ public class CampaignController {
     @Autowired
     private TransactionService transactionService;
 
-    @CrossOrigin
+
     @GetMapping
     public List<Campaign> getAllCampaigns() {
         return campaignService.getAllCampaigns();
