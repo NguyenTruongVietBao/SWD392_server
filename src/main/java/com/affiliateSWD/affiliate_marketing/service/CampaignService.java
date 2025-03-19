@@ -3,7 +3,9 @@ package com.affiliateSWD.affiliate_marketing.service;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.affiliateSWD.affiliate_marketing.enums.AffiliateStatus;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
@@ -118,7 +120,15 @@ public class CampaignService {
     }
 
     public List<Campaign> getAllAdvertiserCampaign() {
-        List<Campaign> campaigns = campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.ACTIVE, accountUtils.getAccountCurrent().getId());
+        List<Campaign> campaigns = campaignRepository.findCampaignsByAdvertiserAndStatus(accountUtils.getAccountCurrent().getId(), CampaignStatus.APPROVED);
         return campaigns;
+    }
+
+    public Map<String, Long> getCampaignStats() {
+        Map<String, Long> result = new HashMap<>();
+        result.put("totalAccounts", campaignRepository.countTotalCampaigns());
+        result.put("approvedCampaigns", campaignRepository.countApprovedCampaigns());
+        result.put("pendingCampaigns", campaignRepository.countPendingCampaigns());
+        return result;
     }
 }

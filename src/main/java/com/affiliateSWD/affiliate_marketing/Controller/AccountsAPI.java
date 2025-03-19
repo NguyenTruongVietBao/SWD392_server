@@ -1,6 +1,7 @@
 package com.affiliateSWD.affiliate_marketing.Controller;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
+import com.affiliateSWD.affiliate_marketing.entity.Campaign;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.model.request.AdvertiserRegisterRequest;
 import com.affiliateSWD.affiliate_marketing.model.request.LoginRequest;
@@ -12,10 +13,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/accounts")
@@ -75,5 +78,11 @@ public class AccountsAPI {
     public ResponseEntity test() {
         Account account = authenticationService.test();
         return ResponseEntity.ok(account);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getAllPublisherCampaign() {
+        Map<String, Long> total = authenticationService.getStats();
+        return ResponseEntity.ok(total);
     }
 }

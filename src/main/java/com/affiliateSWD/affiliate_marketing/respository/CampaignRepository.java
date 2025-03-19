@@ -20,4 +20,17 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
             "AND al.publisherAffiliate.id = :publisherId")
     List<Campaign> findCampaignsByAffiliateStatus(@Param("status") AffiliateStatus status,
                                                   @Param("publisherId") Long publisherId);
+
+    @Query("SELECT c FROM Campaign c WHERE c.advertisersCampaign.id = :advertiserId AND c.status = :status")
+    List<Campaign> findCampaignsByAdvertiserAndStatus(@Param("advertiserId") Long advertiserId,
+                                                      @Param("status") CampaignStatus status);
+
+    @Query("SELECT COUNT(c) FROM Campaign c")
+    long countTotalCampaigns();
+
+    @Query("SELECT COUNT(c) FROM Campaign c WHERE c.status = 'APPROVED'")
+    long countApprovedCampaigns();
+
+    @Query("SELECT COUNT(c) FROM Campaign c WHERE c.status = 'PENDING'")
+    long countPendingCampaigns();
 }

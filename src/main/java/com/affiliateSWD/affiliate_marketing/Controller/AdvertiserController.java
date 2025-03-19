@@ -43,7 +43,7 @@ public class AdvertiserController {
     }
 
     @PreAuthorize("hasAuthority('ADVERTISERS')")
-    @GetMapping("/{id}")
+    @GetMapping("listCampaign")
     public ResponseEntity<List<Campaign>> getAllAdvertiserCampaign() {
         List<Campaign> campaigns = campaignService.getAllAdvertiserCampaign();
         return ResponseEntity.ok(campaigns);

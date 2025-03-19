@@ -186,4 +186,9 @@ public class CampaignController {
         return ResponseEntity.ok(affiliateLink);
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getCampaignStats() {
+        Map<String, Long> total = campaignService.getCampaignStats();
+        return ResponseEntity.ok(total);
+    }
 }
