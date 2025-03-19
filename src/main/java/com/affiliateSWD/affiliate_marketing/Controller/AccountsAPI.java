@@ -51,7 +51,7 @@ public class AccountsAPI {
 
     @PostMapping("/register/advertiser")
    
- public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
+    public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
     try {
         Account account = authenticationService.registerAdvertisers(registerRequest);
         return ResponseEntity.ok(account);

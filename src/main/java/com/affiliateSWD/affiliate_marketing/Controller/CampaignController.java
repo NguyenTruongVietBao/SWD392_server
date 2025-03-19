@@ -184,6 +184,6 @@ public class CampaignController {
     public ResponseEntity<Optional<AffiliateLink>> getCampaignById(@PathVariable Long publisherId, Long campaignId) {
         Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(publisherId, campaignId);
         return ResponseEntity.ok(affiliateLink);
-
     }
+
 }

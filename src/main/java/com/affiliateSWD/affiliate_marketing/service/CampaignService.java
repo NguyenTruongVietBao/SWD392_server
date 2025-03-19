@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
+import com.affiliateSWD.affiliate_marketing.enums.AffiliateStatus;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 
 import com.affiliateSWD.affiliate_marketing.model.request.CampaignRequest;
+import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class CampaignService {
     private AdminRepository adminRepository;
     @Autowired
     private AdvertisersRepository advertisersReposioty;
+    @Autowired
+    private AccountUtils accountUtils;
 
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
@@ -108,4 +112,13 @@ public class CampaignService {
         return false; 
     }
 
+    public List<Campaign> getAllPublisherCampaign() {
+        List<Campaign> campaigns = campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.ACTIVE, accountUtils.getAccountCurrent().getId());
+        return campaigns;
+    }
+
+    public List<Campaign> getAllAdvertiserCampaign() {
+        List<Campaign> campaigns = campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.ACTIVE, accountUtils.getAccountCurrent().getId());
+        return campaigns;
+    }
 }
