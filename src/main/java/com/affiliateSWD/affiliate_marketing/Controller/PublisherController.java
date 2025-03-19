@@ -21,7 +21,7 @@ public class PublisherController {
     CampaignService campaignService;
 
     @PreAuthorize("hasAuthority('PUBLISHER')")
-    @GetMapping("/{id}")
+    @GetMapping("/listCampaign")
     public ResponseEntity<List<Campaign>> getAllPublisherCampaign() {
         List<Campaign> campaigns = campaignService.getAllPublisherCampaign();
         return ResponseEntity.ok(campaigns);
