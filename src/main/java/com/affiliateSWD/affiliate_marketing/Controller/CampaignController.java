@@ -130,10 +130,10 @@ public class CampaignController {
     // }
 
     @PreAuthorize("hasAuthority('PUBLISHER')")
-    @PostMapping("/generateLink/{campaignId}/{adsLink}")
-    public ResponseEntity<String> generateAffiliateLink(@PathVariable Long campaignId, String adsLink) {
+    @PostMapping("/generateLink/{campaignId}")
+    public ResponseEntity<String> generateAffiliateLink(@PathVariable Long campaignId) {
         try {
-            String affiliateLink = affiliateService.createAffiliateLink(adsLink, campaignId);
+            String affiliateLink = affiliateService.createAffiliateLink(campaignId);
             return ResponseEntity.ok(affiliateLink);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -169,6 +169,7 @@ public class CampaignController {
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();
+            System.out.println(redirectUrl);
             response.sendRedirect(redirectUrl);
 
             return ResponseEntity.ok().build();
@@ -184,6 +185,11 @@ public class CampaignController {
     public ResponseEntity<Optional<AffiliateLink>> getCampaignById(@PathVariable Long publisherId, Long campaignId) {
         Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(publisherId, campaignId);
         return ResponseEntity.ok(affiliateLink);
+    }
 
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getCampaignStats() {
+        Map<String, Long> total = campaignService.getCampaignStats();
+        return ResponseEntity.ok(total);
     }
 }

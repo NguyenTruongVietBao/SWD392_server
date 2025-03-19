@@ -1,6 +1,7 @@
 package com.affiliateSWD.affiliate_marketing.Controller;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
+import com.affiliateSWD.affiliate_marketing.entity.Campaign;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.model.request.AdvertiserRegisterRequest;
 import com.affiliateSWD.affiliate_marketing.model.request.LoginRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -58,7 +60,7 @@ public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
     @PostMapping("/register/advertiser")
    
- public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
+    public ResponseEntity<?> registerAdvertier(@RequestBody AdvertiserRegisterRequest registerRequest) {
     try {
         Account account = authenticationService.registerAdvertisers(registerRequest);
         return ResponseEntity.ok(account);
@@ -82,5 +84,11 @@ public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
     public ResponseEntity test() {
         Account account = authenticationService.test();
         return ResponseEntity.ok(account);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getAllPublisherCampaign() {
+        Map<String, Long> total = authenticationService.getStats();
+        return ResponseEntity.ok(total);
     }
 }

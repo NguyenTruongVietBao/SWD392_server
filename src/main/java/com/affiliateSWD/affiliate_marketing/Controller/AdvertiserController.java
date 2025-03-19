@@ -1,18 +1,20 @@
 package com.affiliateSWD.affiliate_marketing.Controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
+import com.affiliateSWD.affiliate_marketing.entity.Campaign;
+import com.affiliateSWD.affiliate_marketing.service.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import com.affiliateSWD.affiliate_marketing.entity.Account;
 import com.affiliateSWD.affiliate_marketing.model.request.PaymentRequest;
 import com.affiliateSWD.affiliate_marketing.service.AdvertiserService;
 import com.affiliateSWD.affiliate_marketing.service.AuthenticationService;
 import com.stripe.exception.StripeException;
-import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
@@ -22,8 +24,11 @@ public class AdvertiserController {
     @Autowired
     private  AdvertiserService advertiserService;
 
-     @Autowired
+    @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private CampaignService campaignService;
 
     @PostMapping("/payment")
     public Map<String, String> createPaymentIntent(
@@ -35,5 +40,12 @@ public class AdvertiserController {
         System.out.println("Received payment request: " + payment);
         
         return advertiserService.processPayment(Id, payment.getAmount());
+    }
+
+    @PreAuthorize("hasAuthority('ADVERTISERS')")
+    @GetMapping("listCampaign")
+    public ResponseEntity<List<Campaign>> getAllAdvertiserCampaign() {
+        List<Campaign> campaigns = campaignService.getAllAdvertiserCampaign();
+        return ResponseEntity.ok(campaigns);
     }
 }

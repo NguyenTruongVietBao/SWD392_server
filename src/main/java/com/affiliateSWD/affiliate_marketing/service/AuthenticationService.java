@@ -28,7 +28,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -178,4 +180,11 @@ public class AuthenticationService implements UserDetailsService {
         return accountUtils.getAccountCurrent();
     }
 
+    public Map<String, Long> getStats() {
+        Map<String, Long> result = new HashMap<>();
+        result.put("totalAccounts", authenticationRepository.countTotalAccounts());
+        result.put("totalPublishers", authenticationRepository.countTotalPublishers());
+        result.put("totalAdvertisers", authenticationRepository.countTotalAdvertisers());
+        return result;
+    }
 }

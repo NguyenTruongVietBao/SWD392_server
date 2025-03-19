@@ -23,6 +23,7 @@ public class AffiliateLink {
 
     private String shortUrl;
 
+    @Enumerated(EnumType.STRING)
     private AffiliateStatus status;
 
     private LocalDateTime createAt;
