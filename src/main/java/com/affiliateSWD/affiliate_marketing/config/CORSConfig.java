@@ -30,7 +30,8 @@ public class CORSConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Apply CORS policy to all endpoints
-                .allowedOrigins("http://localhost:5173", "https://vercel.com/nt-vbaos-projects/swd-392-client/2VvnWZmhVWiJzbN6R6SP8nr9aHkP") // Allowed origins
+//                .allowedOrigins("http://localhost:5173", "https://vercel.com/nt-vbaos-projects/swd-392-client/2VvnWZmhVWiJzbN6R6SP8nr9aHkP") // Allowed origins
+                .allowedOrigins("*") // Allowed origins
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // HTTP methods
                 .allowedHeaders("Authorization", "Content-Type") // Allowed headers
                 .allowCredentials(true); // Allow credentials (cookies, Authorization headers, etc.)
