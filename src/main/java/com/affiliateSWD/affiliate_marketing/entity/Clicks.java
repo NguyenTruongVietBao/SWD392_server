@@ -27,12 +27,13 @@ public class Clicks {
 
     private float quanlityScore;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) 
+    @Column(name = "status") 
     private ClickStatus status;
 
     private LocalDateTime timeClick;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "affiliate_id", nullable = false)
     private AffiliateLink affiliateLinkClick;
 

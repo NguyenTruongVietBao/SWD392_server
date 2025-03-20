@@ -10,12 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 
 public class ClickTrackingService {
     @Autowired
     ClickTrackingRepository clickTrackingRepository;
+
+
+    public Optional<Clicks> checkClick(AffiliateLink affiliateLink, String ipAddress) {
+        return clickTrackingRepository.findFirstByAffiliateLinkClickAndIpAddress(affiliateLink, ipAddress);
+    }
 
 //    public Clicks createClick(AffiliateLink affiliateLink, HttpServletRequest request, Transaction transaction) {
 //        Clicks click = new Clicks();

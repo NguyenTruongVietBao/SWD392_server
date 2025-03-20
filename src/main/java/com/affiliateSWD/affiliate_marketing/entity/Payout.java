@@ -24,6 +24,7 @@ public class Payout {
 
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
     private PayoutStatus status;
 
     @OneToMany(mappedBy = "payoutTransaction", cascade = CascadeType.ALL)

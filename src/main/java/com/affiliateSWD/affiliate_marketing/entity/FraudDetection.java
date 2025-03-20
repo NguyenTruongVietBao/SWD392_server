@@ -24,7 +24,8 @@ public class FraudDetection {
     private String reason;
 
     private String evidence;
-
+    
+    @Enumerated(EnumType.STRING)
     private FraudType fraudType;
 
     private LocalDateTime flaggedDate;

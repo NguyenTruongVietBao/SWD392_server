@@ -9,6 +9,8 @@ import com.affiliateSWD.affiliate_marketing.respository.ClickTrackingRepository;
 import com.affiliateSWD.affiliate_marketing.respository.PayoutRepository;
 import com.affiliateSWD.affiliate_marketing.respository.TransactionRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +33,9 @@ public class TransactionService {
 
     @Autowired
     private ClickTrackingRepository clickTrackingRepository;
-
+    @Transactional
     public Transaction createTransaction(AffiliateLink affiliateLink, HttpServletRequest request) {
+        try {
         String ipAddress = getClientIp(request);
 
         Clicks click = new Clicks();
@@ -44,11 +47,13 @@ public class TransactionService {
         click.setStatus(determineStatus(click.getQuanlityScore()));
 
         click = clickTrackingRepository.save(click);
-
-        Optional<Clicks> existingClick = clickTrackingRepository.findByAffiliateLinkClickAndIpAddress(affiliateLink, ipAddress);
+        Optional<Clicks> existingClick = clickTrackingRepository.findFirstByAffiliateLinkClickAndIpAddress(affiliateLink, ipAddress);
 
         if (existingClick.isPresent() && existingClick.get().getTransactionClick() != null) {
-            return existingClick.get().getTransactionClick(); // Trả về transaction đã tồn tại
+            Transaction existingTransaction = existingClick.get().getTransactionClick();
+            click.setTransactionClick(existingTransaction);
+            clickTrackingRepository.save(click); 
+            return existingTransaction;
         }
 
         Transaction transaction = new Transaction();
@@ -74,14 +79,27 @@ public class TransactionService {
         clickTrackingRepository.save(click);
 
         return transaction;
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Lỗi xảy ra khi truy vấn: " + e.getMessage());
+    }
+    return null;
     }
 
+
     public String getClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For"); // Nếu request đi qua proxy
-        if (ip == null || ip.isEmpty()) {
-            ip = request.getRemoteAddr(); // Lấy IP gốc của user
+        String ipAddress = request.getHeader("X-Forwarded-For");
+
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
         }
-        return ip;
+
+        // Chuyển IPv6 localhost về IPv4
+        if ("0:0:0:0:0:0:0:1".equals(ipAddress) || "::1".equals(ipAddress)) {
+            ipAddress = "127.0.0.1";
+        }
+
+        return ipAddress;
     }
 
     public String getSourceLabel(HttpServletRequest request) {
