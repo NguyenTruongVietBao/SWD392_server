@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/publisher")
@@ -20,10 +21,16 @@ public class PublisherController {
     @Autowired
     CampaignService campaignService;
 
-    @PreAuthorize("hasAuthority('PUBLISHER')")
-    @GetMapping("/listCampaign")
-    public ResponseEntity<List<Campaign>> getAllPublisherCampaign() {
-        List<Campaign> campaigns = campaignService.getAllPublisherCampaign();
+//    @PreAuthorize("hasAuthority('PUBLISHER')")
+//    @GetMapping("/listCampaign")
+//    public ResponseEntity<List<Campaign>> getAllPublisherCampaign() {
+//        List<Campaign> campaigns = campaignService.getAllPublisherCampaign();
+//        return ResponseEntity.ok(campaigns);
+//    }
+
+    @GetMapping("listCampaign/{id}")
+    public ResponseEntity<Map<String, List<Campaign>>> getAllPublisherCampaign(Long id) {
+        Map<String, List<Campaign>> campaigns = campaignService.getAllPublisherCampaigns(id);
         return ResponseEntity.ok(campaigns);
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -186,5 +188,56 @@ public class AuthenticationService implements UserDetailsService {
         result.put("totalPublishers", authenticationRepository.countTotalPublishers());
         result.put("totalAdvertisers", authenticationRepository.countTotalAdvertisers());
         return result;
+    }
+
+    public boolean deleteAccount(Long accountId) {
+        try {
+            Optional<Account> account = authenticationRepository.findById(accountId);
+            if (account.isPresent()) {
+                authenticationRepository.delete(account.get());
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting account: " + e.getMessage());
+        }
+    }
+
+    public Account updatePublisher(Long id, PublisherRegisterRequest updateRequest) {
+        Optional<Account> accountOptional = authenticationRepository.findById(id);
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setEmail(updateRequest.getEmail().trim() != ""? updateRequest.getEmail():account.getEmail());
+            account.setPhoneNumber(updateRequest.getPhoneNumber().trim() != ""? updateRequest.getPhoneNumber():account.getPhoneNumber());
+            account.setPassword(updateRequest.getPassword().trim() != ""? updateRequest.getPassword(): account.getPassword());
+
+            Publisher publisher = account.getPublisher();
+
+            publisher.setPaymentInfo(updateRequest.getPaymentInfo().trim() != ""? updateRequest.getPaymentInfo(): account.getPublisher().getPaymentInfo());
+            publisher.setReferralCode(updateRequest.getReferralCode().trim() != ""? updateRequest.getReferralCode(): account.getPublisher().getReferralCode());
+            account.setPublisher(publisher);
+
+            return authenticationRepository.save(account);
+        }
+        return null;
+    }
+
+    public Account updateAdvertiser(Long id, AdvertiserRegisterRequest updateRequest) {
+        Optional<Account> accountOptional = authenticationRepository.findById(id);
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setEmail(updateRequest.getEmail().trim() != ""? updateRequest.getEmail():account.getEmail());
+            account.setPhoneNumber(updateRequest.getPhoneNumber().trim() != ""? updateRequest.getPhoneNumber():account.getPhoneNumber());
+            account.setPassword(updateRequest.getPassword().trim() != ""? updateRequest.getPassword(): account.getPassword());
+
+            Advertisers advertiser = account.getAdvertisers();
+
+            advertiser.setCompanyName(updateRequest.getCompanyName().trim() != ""? updateRequest.getCompanyName(): account.getAdvertisers().getCompanyName());
+            advertiser.setBillingInfo(updateRequest.getBillingInfo().trim() != ""? updateRequest.getBillingInfo(): account.getAdvertisers().getBillingInfo());
+            account.setAdvertisers(advertiser);
+
+            return authenticationRepository.save(account);
+        }
+        return null;
     }
 }
