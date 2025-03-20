@@ -141,8 +141,7 @@ public class CampaignController {
     }
 
     @GetMapping("/affiliateLink/redirect")
-    public ResponseEntity<Void> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
+    public ResponseEntity<String> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletRequest request) {        try {
             String safeAffId = aff_id.replace("-", "+").replace("_", "/");
 
             byte[] decodedBytes = Base64.getUrlDecoder().decode(safeAffId);
@@ -161,18 +160,17 @@ public class CampaignController {
                 return ResponseEntity.notFound().build();
             }
 
-            Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null), request);
-            if (transaction == null){
-                return ResponseEntity.notFound().build();
+        Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null), request);
+           if (transaction == null){
+               return ResponseEntity.notFound().build();
             }
 
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();
-            System.out.println(redirectUrl);
-            response.sendRedirect(redirectUrl);
-
-            return ResponseEntity.ok().build();
+            
+            // Trả về link thay vì điều hướng
+            return ResponseEntity.ok(redirectUrl);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
