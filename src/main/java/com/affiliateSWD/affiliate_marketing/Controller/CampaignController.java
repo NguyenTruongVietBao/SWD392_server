@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
@@ -141,7 +138,7 @@ public class CampaignController {
     }
 
     @GetMapping("/affiliateLink/redirect")
-    public ResponseEntity<Void> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> trackAndRedirect(@RequestParam("aff_id") String aff_id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String safeAffId = aff_id.replace("-", "+").replace("_", "/");
 
@@ -162,17 +159,17 @@ public class CampaignController {
             }
 
             Transaction transaction = transactionService.createTransaction(affiliateLink.orElse(null), request);
-            if (transaction == null){
-                return ResponseEntity.notFound().build();
-            }
+//            if (transaction == null){
+//                return ResponseEntity.notFound().build();
+//            }
 
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();
-            System.out.println(redirectUrl);
-            response.sendRedirect(redirectUrl);
+//            System.out.println(redirectUrl);
+//            response.sendRedirect(redirectUrl);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(redirectUrl);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
