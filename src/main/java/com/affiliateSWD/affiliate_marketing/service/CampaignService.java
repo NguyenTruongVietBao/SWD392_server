@@ -127,9 +127,12 @@ public class CampaignService {
 
     public Map<String, Long> getCampaignStats() {
         Map<String, Long> result = new HashMap<>();
-        result.put("totalAccounts", campaignRepository.countTotalCampaigns());
-        result.put("approvedCampaigns", campaignRepository.countApprovedCampaigns());
-        result.put("pendingCampaigns", campaignRepository.countPendingCampaigns());
+        result.put("Total", campaignRepository.countTotalCampaigns());
+        result.put("APPROVED", campaignRepository.countStatusCampaigns(CampaignStatus.APPROVED));
+        result.put("PENDING", campaignRepository.countStatusCampaigns(CampaignStatus.PENDING));
+        result.put("REJECTED", campaignRepository.countStatusCampaigns(CampaignStatus.REJECTED));
+        result.put("PAUSED", campaignRepository.countStatusCampaigns(CampaignStatus.PAUSED));
+        result.put("EXPIRED", campaignRepository.countStatusCampaigns(CampaignStatus.EXPIRED));
         return result;
     }
 
