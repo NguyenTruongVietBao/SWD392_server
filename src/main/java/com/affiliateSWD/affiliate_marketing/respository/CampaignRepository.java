@@ -33,4 +33,7 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
     @Query("SELECT COUNT(c) FROM Campaign c WHERE c.status = 'PENDING'")
     long countPendingCampaigns();
+
+    @Query("SELECT COUNT(c) FROM Campaign c WHERE c.status = :status ")
+    long countStatusCampaigns(@Param("status") CampaignStatus status);
 }
