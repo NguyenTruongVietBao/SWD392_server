@@ -35,11 +35,10 @@ public class FraudDetection {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id", nullable = true)
     private Admin adminFraud;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "affiliate_id", nullable = false)
     private AffiliateLink affiliateLinkFraud;
 

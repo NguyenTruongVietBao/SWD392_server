@@ -44,5 +44,4 @@ public class Clicks {
     @OneToOne(mappedBy = "clickFraud", cascade = CascadeType.ALL)
     @JsonIgnore
     FraudDetection fraudDetections;
-
 }
