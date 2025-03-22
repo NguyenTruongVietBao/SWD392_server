@@ -10,6 +10,7 @@ import com.affiliateSWD.affiliate_marketing.respository.AdminRepository;
 import com.affiliateSWD.affiliate_marketing.respository.FraudDetectionRepository;
 import com.affiliateSWD.affiliate_marketing.entity.Admin;
 import com.affiliateSWD.affiliate_marketing.entity.FraudDetection;
+import com.affiliateSWD.affiliate_marketing.enums.ClickStatus;
 import com.affiliateSWD.affiliate_marketing.enums.FraudStatus;
 
 @Service
@@ -42,6 +43,15 @@ public class FraudDetectionServices {
             updatedFraudDetection.setReviewAt(approvedAt);
             updatedFraudDetection.setAdminFraud(admin);
             updatedFraudDetection.setStatus(status);
+
+            if(updatedFraudDetection.getStatus() == FraudStatus.REJECTED) {
+            updatedFraudDetection.getClickFraud().setStatus(ClickStatus.INVALID);
+            }else if (updatedFraudDetection.getStatus() == FraudStatus.APPROVED) {
+            updatedFraudDetection.getClickFraud().setStatus(ClickStatus.VALID);
+            }
+
+
+
             return fraudDetectionRepository.save(updatedFraudDetection);
         }
         return null;
