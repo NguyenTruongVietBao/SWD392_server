@@ -165,8 +165,7 @@ public class CampaignController {
             totalClickService.incrementClickCount(affiliateLink.orElse(null));
 
             String redirectUrl = affiliateLink.get().getCampaignAffiliate().getAdsLink();
-            
-            // Trả về link thay vì điều hướng
+
             return ResponseEntity.ok(redirectUrl);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
