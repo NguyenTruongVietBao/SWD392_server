@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         account.setRole(AccountRoles.PUBLISHER);
         account.setStatus(AccountStatus.ACTIVE);
+        account.setCreatedAt(LocalDateTime.now());
 
         Publisher publisher = new Publisher();
         publisher.setPaymentInfo(registerRequest.getPaymentInfo());
@@ -161,6 +163,7 @@ public class AuthenticationService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         account.setRole(AccountRoles.ADVERTISERS);
         account.setStatus(AccountStatus.ACTIVE);
+        account.setCreatedAt(LocalDateTime.now());
 
         Advertisers advertisers = new Advertisers();
         advertisers.setBillingInfo(registerRequest.getBillingInfo());
@@ -243,5 +246,19 @@ public class AuthenticationService implements UserDetailsService {
 
     public List<Account> getAllAccounts() {
         return authenticationRepository.findAll();
+    }
+
+    public List<Account> getRecentAccounts() {
+        return authenticationRepository.findTop4ByOrderByCreatedAtDesc();
+    }
+
+    public Account changeStatus(Long id, AccountStatus status) {
+        Optional<Account> accountOptional = authenticationRepository.findById(id);
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setStatus(status);
+            return authenticationRepository.save(account);
+        }
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
@@ -28,5 +29,8 @@ public interface AuthenticationRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT COUNT(a) FROM Account a WHERE a.role = 'ADVERTISERS'")
     long countTotalAdvertisers();
+
+    @Query("SELECT a FROM Account a ORDER BY a.createdAt DESC")
+    List<Account> findTop4ByOrderByCreatedAtDesc();
 }
 

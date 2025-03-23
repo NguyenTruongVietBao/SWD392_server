@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,9 @@ public class Account implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private AccountRoles role;
+
+//    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @JsonManagedReference
     @OneToOne(mappedBy = "accountPublisher", cascade = CascadeType.ALL, orphanRemoval = true)

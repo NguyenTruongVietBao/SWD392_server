@@ -136,28 +136,22 @@ public class CampaignService {
         return result;
     }
 
-    public Map<String, List<Campaign>> getAllAdvertiserCampaigns(Long id) {
+    public List<Campaign> getAllAdvertiserCampaigns(Long id) {
         Optional<Account> accountOptional = authenticationRepository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            Map<String, List<Campaign>> result = new HashMap<>();
-            result.put("PENDING", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.PENDING));
-            result.put("APPROVED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.APPROVED));
-            result.put("REJECTED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.REJECTED));
-            result.put("PAUSED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.PAUSED));
-            result.put("EXPIRED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.EXPIRED));
+            List<Campaign> result = campaignRepository.findCampaignsByAdvertiser(account.getAdvertisers().getId());
             return result;
         }
         return null;
     }
 
-    public Map<String, List<Campaign>> getAllPublisherCampaigns(Long id) {
+
+    public List<Campaign> getAllPublisherCampaigns(Long id) {
         Optional<Account> accountOptional = authenticationRepository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            Map<String, List<Campaign>> result = new HashMap<>();
-            result.put("ACTIVE", campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.ACTIVE, account.getId()));
-            result.put("LOCKED", campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.LOCKED, account.getId()));
+            List<Campaign> result = campaignRepository.findCampaignsByAffiliate(account.getAdvertisers().getId());
             return result;
         }
         return null;

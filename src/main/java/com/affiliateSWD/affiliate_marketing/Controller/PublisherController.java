@@ -29,8 +29,8 @@ public class PublisherController {
 //    }
 
     @GetMapping("listCampaign/{id}")
-    public ResponseEntity<Map<String, List<Campaign>>> getAllPublisherCampaign(Long id) {
-        Map<String, List<Campaign>> campaigns = campaignService.getAllPublisherCampaigns(id);
+    public ResponseEntity<List<Campaign>> getAllPublisherCampaign(Long id) {
+        List<Campaign> campaigns = campaignService.getAllPublisherCampaigns(id);
         return ResponseEntity.ok(campaigns);
     }
 }

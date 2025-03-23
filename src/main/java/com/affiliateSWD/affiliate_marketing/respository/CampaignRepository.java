@@ -21,6 +21,14 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     List<Campaign> findCampaignsByAffiliateStatus(@Param("status") AffiliateStatus status,
                                                   @Param("publisherId") Long publisherId);
 
+    @Query("SELECT c FROM Campaign c " +
+            "JOIN c.affiliateLinks al " +
+            "WHERE al.publisherAffiliate.id = :publisherId")
+    List<Campaign> findCampaignsByAffiliate(@Param("publisherId") Long publisherId);
+
+    @Query("SELECT c FROM Campaign c WHERE c.advertisersCampaign.id = :advertiserId")
+    List<Campaign> findCampaignsByAdvertiser(@Param("advertiserId") Long advertiserId);
+
     @Query("SELECT c FROM Campaign c WHERE c.advertisersCampaign.id = :advertiserId AND c.status = :status")
     List<Campaign> findCampaignsByAdvertiserAndStatus(@Param("advertiserId") Long advertiserId,
                                                       @Param("status") CampaignStatus status);
@@ -36,4 +44,6 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
     @Query("SELECT COUNT(c) FROM Campaign c WHERE c.status = :status ")
     long countStatusCampaigns(@Param("status") CampaignStatus status);
+
+
 }
