@@ -78,6 +78,12 @@ public class AccountsController {
         return ResponseEntity.ok(accounts);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accounts = authenticationService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
+    }
+
     @GetMapping("/test")
     public ResponseEntity test() {
         Account account = authenticationService.test();

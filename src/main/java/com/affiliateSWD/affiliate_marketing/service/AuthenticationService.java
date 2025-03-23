@@ -240,4 +240,8 @@ public class AuthenticationService implements UserDetailsService {
         }
         return null;
     }
+
+    public List<Account> getAllAccounts() {
+        return authenticationRepository.findAll();
+    }
 }
