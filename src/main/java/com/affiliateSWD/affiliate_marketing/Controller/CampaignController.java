@@ -64,6 +64,7 @@ public class CampaignController {
         Campaign campaign = campaignService.getCampaignById(id);
         return ResponseEntity.ok(campaign);   
     }
+
     @PutMapping("/updateStatus/{id}")
     public ResponseEntity<?> updateCampaignStatus(
     @PathVariable Long id, 
@@ -193,5 +194,10 @@ public class CampaignController {
     @GetMapping("/allPublishers/{campaignId}")
     public ResponseEntity<List<Account>> getPublishersByCampaign(@PathVariable Long campaignId) {
         return ResponseEntity.ok(publisherService.getPublishersByCampaignId(campaignId));
+    }
+
+    @GetMapping("/unregistered/{accountId}")
+    public ResponseEntity<List<Campaign>> getUnregisteredApprovedCampaigns(@PathVariable Long accountId) {
+        return ResponseEntity.ok(campaignService.getUnregisteredApprovedCampaigns(accountId));
     }
 }

@@ -46,4 +46,7 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     long countStatusCampaigns(@Param("status") CampaignStatus status);
 
 
+    @Query("SELECT c FROM Campaign c WHERE c.status = 'APPROVED' AND c.id NOT IN (" +
+            "SELECT al.campaignAffiliate.id FROM AffiliateLink al WHERE al.publisherAffiliate.id = :publisherId)")
+    List<Campaign> findUnregisteredApprovedCampaigns(Long publisherId);
 }

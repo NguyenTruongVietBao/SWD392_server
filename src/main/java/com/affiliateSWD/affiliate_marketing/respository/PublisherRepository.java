@@ -14,4 +14,7 @@ import java.util.List;
 public interface PublisherRepository extends JpaRepository<Publisher, Long> {
     @Query("SELECT p FROM Publisher p JOIN p.affiliateLinks al WHERE al.campaignAffiliate.id = :campaignId")
     List<Publisher> findAllPublishersByCampaignId(Long campaignId);
+
+    @Query("SELECT p.id FROM Publisher p WHERE p.accountPublisher.id = :accountId")
+    Long findPublisherIdByAccountId(Long accountId);
 }

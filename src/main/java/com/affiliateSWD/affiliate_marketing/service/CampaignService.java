@@ -9,7 +9,7 @@ import com.affiliateSWD.affiliate_marketing.enums.AffiliateStatus;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 
 import com.affiliateSWD.affiliate_marketing.model.request.CampaignRequest;
-import com.affiliateSWD.affiliate_marketing.respository.AuthenticationRepository;
+import com.affiliateSWD.affiliate_marketing.respository.*;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import com.affiliateSWD.affiliate_marketing.entity.Admin;
 import com.affiliateSWD.affiliate_marketing.entity.Advertisers;
 import com.affiliateSWD.affiliate_marketing.entity.Campaign;
-import com.affiliateSWD.affiliate_marketing.respository.AdminRepository;
-import com.affiliateSWD.affiliate_marketing.respository.AdvertisersRepository;
-import com.affiliateSWD.affiliate_marketing.respository.CampaignRepository;
+
 @Service
 public class CampaignService {
 
@@ -33,6 +31,8 @@ public class CampaignService {
     private AccountUtils accountUtils;
     @Autowired
     private AuthenticationRepository authenticationRepository;
+    @Autowired
+    private PublisherRepository publisherRepository;
 
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
@@ -155,5 +155,11 @@ public class CampaignService {
             return result;
         }
         return null;
+    }
+
+    public List<Campaign> getUnregisteredApprovedCampaigns(Long accountId) {
+        Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
+        System.out.println(publisherId + "*******");
+        return campaignRepository.findUnregisteredApprovedCampaigns(publisherId);
     }
 }
