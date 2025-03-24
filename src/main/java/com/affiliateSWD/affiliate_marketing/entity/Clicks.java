@@ -33,10 +33,12 @@ public class Clicks {
 
     private LocalDateTime timeClick;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "affiliate_id", nullable = false)
     private AffiliateLink affiliateLinkClick;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "transaction_id", nullable = true)
     private Transaction transactionClick;

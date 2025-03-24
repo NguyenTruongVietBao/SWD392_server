@@ -4,12 +4,15 @@ import com.affiliateSWD.affiliate_marketing.entity.AffiliateLink;
 import com.affiliateSWD.affiliate_marketing.entity.Clicks;
 import com.affiliateSWD.affiliate_marketing.entity.Transaction;
 import com.affiliateSWD.affiliate_marketing.enums.ClickStatus;
+import com.affiliateSWD.affiliate_marketing.respository.AffiliateRepository;
 import com.affiliateSWD.affiliate_marketing.respository.ClickTrackingRepository;
+import com.affiliateSWD.affiliate_marketing.respository.PublisherRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,9 +21,19 @@ public class ClickTrackingService {
     @Autowired
     ClickTrackingRepository clickTrackingRepository;
 
+    @Autowired
+    AffiliateRepository affiliateRepository;
+
+    @Autowired
+    PublisherRepository publisherRepository;
 
     public Optional<Clicks> checkClick(AffiliateLink affiliateLink, String ipAddress) {
         return clickTrackingRepository.findFirstByAffiliateLinkClickAndIpAddress(affiliateLink, ipAddress);
+    }
+
+    public List<Clicks> getClicksByPublisherId(Long accountId) {
+        Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
+        return affiliateRepository.findClicksByPublisherId(publisherId);
     }
 
 //    public Clicks createClick(AffiliateLink affiliateLink, HttpServletRequest request, Transaction transaction) {

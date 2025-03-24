@@ -80,7 +80,8 @@ public class AffiliateService {
         }
     }
 
-    public Optional<AffiliateLink> getTwoData(Long publisherId, Long campaignId) {
+    public Optional<AffiliateLink> getTwoData(Long accountId, Long campaignId) {
+        Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
         return affiliateRepository.findByPublisherAffiliateIdAndCampaignAffiliateId(publisherId, campaignId);
     }
 }

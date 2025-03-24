@@ -179,9 +179,9 @@ public class CampaignController {
     }
 
 
-    @GetMapping("/check/{publisherId}/{campaignId}")
-    public ResponseEntity<Optional<AffiliateLink>> getCampaignById(@PathVariable Long publisherId, Long campaignId) {
-        Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(publisherId, campaignId);
+    @GetMapping("/check/{accountId}/{campaignId}")
+    public ResponseEntity<Optional<AffiliateLink>> getCampaignById(@PathVariable Long accountId, Long campaignId) {
+        Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(accountId, campaignId);
         return ResponseEntity.ok(affiliateLink);
     }
 
