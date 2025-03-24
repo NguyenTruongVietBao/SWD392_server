@@ -50,6 +50,9 @@ public class CampaignController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private PublisherService publisherService;
+
 
     @GetMapping
     public List<Campaign> getAllCampaigns() {
@@ -185,5 +188,10 @@ public class CampaignController {
     public ResponseEntity<Map<String, Long>> getCampaignStats() {
         Map<String, Long> total = campaignService.getCampaignStats();
         return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/allPublishers/{campaignId}")
+    public ResponseEntity<List<Account>> getPublishersByCampaign(@PathVariable Long campaignId) {
+        return ResponseEntity.ok(publisherService.getPublishersByCampaignId(campaignId));
     }
 }
