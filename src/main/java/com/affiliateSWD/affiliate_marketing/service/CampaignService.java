@@ -9,7 +9,7 @@ import com.affiliateSWD.affiliate_marketing.enums.AffiliateStatus;
 import com.affiliateSWD.affiliate_marketing.enums.CampaignStatus;
 
 import com.affiliateSWD.affiliate_marketing.model.request.CampaignRequest;
-import com.affiliateSWD.affiliate_marketing.respository.AuthenticationRepository;
+import com.affiliateSWD.affiliate_marketing.respository.*;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import com.affiliateSWD.affiliate_marketing.entity.Admin;
 import com.affiliateSWD.affiliate_marketing.entity.Advertisers;
 import com.affiliateSWD.affiliate_marketing.entity.Campaign;
-import com.affiliateSWD.affiliate_marketing.respository.AdminRepository;
-import com.affiliateSWD.affiliate_marketing.respository.AdvertisersRepository;
-import com.affiliateSWD.affiliate_marketing.respository.CampaignRepository;
+
 @Service
 public class CampaignService {
 
@@ -33,6 +31,8 @@ public class CampaignService {
     private AccountUtils accountUtils;
     @Autowired
     private AuthenticationRepository authenticationRepository;
+    @Autowired
+    private PublisherRepository publisherRepository;
 
     public List<Campaign> getAllCampaigns() {
         return campaignRepository.findAll();
@@ -136,30 +136,30 @@ public class CampaignService {
         return result;
     }
 
-    public Map<String, List<Campaign>> getAllAdvertiserCampaigns(Long id) {
+    public List<Campaign> getAllAdvertiserCampaigns(Long id) {
         Optional<Account> accountOptional = authenticationRepository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            Map<String, List<Campaign>> result = new HashMap<>();
-            result.put("PENDING", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.PENDING));
-            result.put("APPROVED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.APPROVED));
-            result.put("REJECTED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.REJECTED));
-            result.put("PAUSED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.PAUSED));
-            result.put("EXPIRED", campaignRepository.findCampaignsByAdvertiserAndStatus(account.getId(), CampaignStatus.EXPIRED));
+            List<Campaign> result = campaignRepository.findCampaignsByAdvertiser(account.getAdvertisers().getId());
             return result;
         }
         return null;
     }
 
-    public Map<String, List<Campaign>> getAllPublisherCampaigns(Long id) {
+
+    public List<Campaign> getAllPublisherCampaigns(Long id) {
         Optional<Account> accountOptional = authenticationRepository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            Map<String, List<Campaign>> result = new HashMap<>();
-            result.put("ACTIVE", campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.ACTIVE, account.getId()));
-            result.put("LOCKED", campaignRepository.findCampaignsByAffiliateStatus(AffiliateStatus.LOCKED, account.getId()));
+            List<Campaign> result = campaignRepository.findCampaignsByAffiliate(account.getAdvertisers().getId());
             return result;
         }
         return null;
+    }
+
+    public List<Campaign> getUnregisteredApprovedCampaigns(Long accountId) {
+        Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
+        System.out.println(publisherId + "*******");
+        return campaignRepository.findUnregisteredApprovedCampaigns(publisherId);
     }
 }

@@ -2,6 +2,7 @@ package com.affiliateSWD.affiliate_marketing.entity;
 
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
 import com.affiliateSWD.affiliate_marketing.enums.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,15 +42,18 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AccountRoles role;
 
-    @JsonManagedReference
+//    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @JsonIgnore
     @OneToOne(mappedBy = "accountPublisher", cascade = CascadeType.ALL, orphanRemoval = true)
     private Publisher publisher;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToOne(mappedBy = "accountAdvertisers", cascade = CascadeType.ALL, orphanRemoval = true)
     private Advertisers advertisers;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToOne(mappedBy = "accountAdmin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Admin admin;
 

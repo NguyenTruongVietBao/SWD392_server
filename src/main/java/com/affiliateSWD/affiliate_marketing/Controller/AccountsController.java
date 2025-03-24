@@ -2,6 +2,7 @@ package com.affiliateSWD.affiliate_marketing.Controller;
 
 import com.affiliateSWD.affiliate_marketing.entity.Account;
 import com.affiliateSWD.affiliate_marketing.enums.AccountRoles;
+import com.affiliateSWD.affiliate_marketing.enums.AccountStatus;
 import com.affiliateSWD.affiliate_marketing.model.request.AdvertiserRegisterRequest;
 import com.affiliateSWD.affiliate_marketing.model.request.LoginRequest;
 import com.affiliateSWD.affiliate_marketing.model.request.PublisherRegisterRequest;
@@ -71,10 +72,12 @@ public class AccountsController {
     @GetMapping("/role/{role}")
     public ResponseEntity<List<Account>> getByRole(@PathVariable AccountRoles role) {
         List<Account> accounts = authenticationService.getAccountsByRole(role);
+        return ResponseEntity.ok(accounts);
+    }
 
-        // In ra để kiểm tra dữ liệu
-        System.out.println("GET API - Role: " + role + " -> Accounts: " + accounts);
-
+    @GetMapping()
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accounts = authenticationService.getAllAccounts();
         return ResponseEntity.ok(accounts);
     }
 
@@ -135,6 +138,34 @@ public class AccountsController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Collections.singletonMap("message", "Error updating account: " + e.getMessage()));
+        }
+    }
+
+//    @GetMapping("")
+//    public ResponseEntity<List<Account>> getAllAccounts() {
+//        List<Account> accounts = authenticationService.getAllAccounts();
+//        return ResponseEntity.ok(accounts);
+//    }
+
+    @GetMapping("/recentAccounts")
+    public ResponseEntity<List<Account>> getRecentAccounts() {
+        List<Account> accounts = authenticationService.getRecentAccounts();
+        return ResponseEntity.ok(accounts);
+    }
+
+    @PutMapping("/changeStatus/{id}/{status}")
+    public ResponseEntity<?> changeStatus(@PathVariable Long id, AccountStatus status) {
+        try {
+            Account account = authenticationService.changeStatus(id, status);
+            if (account != null) {
+                return ResponseEntity.ok(account);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Collections.singletonMap("message", "Account not found"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("message", "Error change status: " + e.getMessage()));
         }
     }
 }
