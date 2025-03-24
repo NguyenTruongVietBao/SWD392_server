@@ -35,8 +35,7 @@ public class AffiliateService {
     public String createAffiliateLink(Long campaignId) {
         Campaign existingCampaign = campaignRepository.findById(campaignId).orElse(null);;
         if (existingCampaign != null) {
-//            String originUrl = "https://swd392-server.onrender.com/";
-            String originUrl = "http://localhost:5173/redirect?";
+            String originUrl = "https://swd392-server.onrender.com/";
             Long acid = accountUtils.getAccountCurrent().getId();
             Publisher publisher = publisherRepository.findByAccountPublisherId(acid).orElse(null);
             String combinedInfo = publisher.getId() + "_" + campaignId;
@@ -79,9 +78,12 @@ public class AffiliateService {
             return null;
         }
     }
-
     public Optional<AffiliateLink> getTwoData(Long accountId, Long campaignId) {
         Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
+        return affiliateRepository.findByPublisherAffiliateIdAndCampaignAffiliateId(publisherId, campaignId);
+    }
+
+    public Optional<AffiliateLink> getTwoDataa(Long publisherId, Long campaignId) {
         return affiliateRepository.findByPublisherAffiliateIdAndCampaignAffiliateId(publisherId, campaignId);
     }
 }
