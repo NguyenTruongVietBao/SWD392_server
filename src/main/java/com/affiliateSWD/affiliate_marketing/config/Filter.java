@@ -40,7 +40,8 @@ public class Filter extends OncePerRequestFilter {
             "/accounts/login",
             "/accounts/role/{role}",
             "/accounts/register/publisher",
-            "/accounts/register/advertiser"
+            "/accounts/register/advertiser",
+            "/api/advertiser/campaigns/affiliateLink/redirect"
 //            "/accounts/test"
     );
 
