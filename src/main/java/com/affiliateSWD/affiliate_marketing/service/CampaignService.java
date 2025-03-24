@@ -151,7 +151,7 @@ public class CampaignService {
         Optional<Account> accountOptional = authenticationRepository.findById(id);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            List<Campaign> result = campaignRepository.findCampaignsByAffiliate(account.getAdvertisers().getId());
+            List<Campaign> result = campaignRepository.findCampaignsByAffiliate(account.getPublisher().getId());
             return result;
         }
         return null;
@@ -159,7 +159,6 @@ public class CampaignService {
 
     public List<Campaign> getUnregisteredApprovedCampaigns(Long accountId) {
         Long publisherId = publisherRepository.findPublisherIdByAccountId(accountId);
-        System.out.println(publisherId + "*******");
         return campaignRepository.findUnregisteredApprovedCampaigns(publisherId);
     }
 }
