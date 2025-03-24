@@ -19,4 +19,7 @@ public interface ClickTrackingRepository extends JpaRepository<Clicks, Long> {
                                                                 @Param("ipAddress") String ipAddress);    
                                                                 @Query("SELECT c FROM Clicks c WHERE c.affiliateLinkClick.id = :affiliateId AND c.ipAddress = :ipAddress AND c.timeClick >= :fiveMinutesAgo ORDER BY c.timeClick DESC")
     List<Clicks> findRecentClicks(@Param("affiliateId") Long affiliateId, @Param("ipAddress") String ipAddress, @Param("fiveMinutesAgo") LocalDateTime fiveMinutesAgo);
+
+
+    long countByAffiliateLinkClickId(Long id);
 }

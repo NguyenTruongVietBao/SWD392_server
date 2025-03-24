@@ -15,4 +15,6 @@ public interface AffiliateRepository extends JpaRepository<AffiliateLink, Long> 
 
     @Query("SELECT c FROM Clicks c WHERE c.affiliateLinkClick.publisherAffiliate.id = :publisherId")
     List<Clicks> findClicksByPublisherId(Long publisherId);
+
+    List<AffiliateLink> findByPublisherAffiliateId(Long publisherId);
 }
