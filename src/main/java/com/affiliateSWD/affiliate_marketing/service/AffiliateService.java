@@ -2,9 +2,11 @@ package com.affiliateSWD.affiliate_marketing.service;
 
 import com.affiliateSWD.affiliate_marketing.entity.AffiliateLink;
 import com.affiliateSWD.affiliate_marketing.entity.Campaign;
+import com.affiliateSWD.affiliate_marketing.entity.Publisher;
 import com.affiliateSWD.affiliate_marketing.enums.AffiliateStatus;
 import com.affiliateSWD.affiliate_marketing.respository.AffiliateRepository;
 import com.affiliateSWD.affiliate_marketing.respository.CampaignRepository;
+import com.affiliateSWD.affiliate_marketing.respository.PublisherRepository;
 import com.affiliateSWD.affiliate_marketing.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
+
 
 @Service
 
@@ -23,6 +26,8 @@ public class AffiliateService {
 
     @Autowired
     CampaignRepository campaignRepository;
+    @Autowired
+    PublisherRepository publisherRepository;
 
     @Autowired
     AccountUtils accountUtils;
@@ -31,7 +36,9 @@ public class AffiliateService {
         Campaign existingCampaign = campaignRepository.findById(campaignId).orElse(null);;
         if (existingCampaign != null) {
             String originUrl = "https://swd392-server.onrender.com/";
-            String combinedInfo = accountUtils.getAccountCurrent().getId() + "_" + campaignId;
+            Long acid = accountUtils.getAccountCurrent().getId();
+            Publisher publisher = publisherRepository.findByAccountPublisherId(acid).orElse(null);
+            String combinedInfo = publisher.getId() + "_" + campaignId;
 
             String encodedAffiliateId = Base64.getUrlEncoder()
                     .withoutPadding()

@@ -50,8 +50,6 @@ public class FraudDetectionServices {
             updatedFraudDetection.getClickFraud().setStatus(ClickStatus.VALID);
             }
 
-
-
             return fraudDetectionRepository.save(updatedFraudDetection);
         }
         return null;
