@@ -181,7 +181,7 @@ public class CampaignController {
 
     @GetMapping("/check/{accountId}/{campaignId}")
     public ResponseEntity<Optional<AffiliateLink>> getCampaignById(@PathVariable Long accountId, Long campaignId) {
-        Optional<AffiliateLink> affiliateLink = affiliateService. getTwoDataa(accountId, campaignId);
+        Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(accountId, campaignId);
         return ResponseEntity.ok(affiliateLink);
     }
 
