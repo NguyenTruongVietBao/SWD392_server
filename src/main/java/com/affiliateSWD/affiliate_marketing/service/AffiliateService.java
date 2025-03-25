@@ -35,7 +35,7 @@ public class AffiliateService {
     public String createAffiliateLink(Long campaignId) {
         Campaign existingCampaign = campaignRepository.findById(campaignId).orElse(null);;
         if (existingCampaign != null) {
-            String originUrl = "https://swd392-server.onrender.com/redirect?";
+            String originUrl = "https://swd-392-client-621vjeutl-nt-vbaos-projects.vercel.app/redirect?";
             Long acid = accountUtils.getAccountCurrent().getId();
             Publisher publisher = publisherRepository.findByAccountPublisherId(acid).orElse(null);
             String combinedInfo = publisher.getId() + "_" + campaignId;
