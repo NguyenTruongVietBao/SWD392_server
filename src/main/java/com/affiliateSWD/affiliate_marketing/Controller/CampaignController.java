@@ -156,7 +156,7 @@ public class CampaignController {
             Long publisherId = Long.parseLong(parts[0]);
             Long campaignId  = Long.parseLong(parts[1]);
 
-            Optional<AffiliateLink> affiliateLink = affiliateService.getTwoData(publisherId, campaignId);
+            Optional<AffiliateLink> affiliateLink = affiliateService.getTwoDataa(publisherId, campaignId);
             if (affiliateLink.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
