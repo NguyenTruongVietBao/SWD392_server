@@ -56,7 +56,9 @@ public class PublisherService {
             affiliateStats.put("AffiliateLink", affiliateLink.getTrackingUrl());
             affiliateStats.put("TotalClicks", totalClicks);
             affiliateStats.put("Income", income);
-
+            affiliateStats.put("idCampaign", affiliateLink.getCampaignAffiliate().getId());
+            affiliateStats.put("commissionRate", affiliateLink.getCampaignAffiliate().getCommissionRate());
+            affiliateStats.put("commissionValue", affiliateLinks.get(0).getCampaignAffiliate().getCommissionValue());
             result.put(affiliateLink.getCampaignAffiliate().getTitle(), affiliateStats);
         }
         return result;
