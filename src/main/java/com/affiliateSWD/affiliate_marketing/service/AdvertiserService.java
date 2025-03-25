@@ -84,4 +84,9 @@ public class AdvertiserService {
         response.put("status", "pending"); // Đợi người dùng thanh toán
         return response;
     }
+
+    public Advertisers getAdvertiser(Long accountId) {
+        return advertisersRepository.findByAccountAdvertisersId(accountId);
+    }
+
 }
